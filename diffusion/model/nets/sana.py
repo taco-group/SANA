@@ -32,6 +32,7 @@ from diffusion.model.nets.sana_blocks import (
     MultiHeadCrossAttention,
     MultiHeadCrossVallinaAttention,
     PatchEmbed,
+    RopePosEmbed,
     T2IFinalLayer,
     TimestepEmbedder,
     t2i_modulate,
@@ -256,13 +257,28 @@ class Sana(nn.Module):
         )
         self.final_layer = T2IFinalLayer(hidden_size, patch_size, self.out_channels)
 
-        self.initialize_weights()
-
         if config and config.work_dir:
             logger = get_root_logger(os.path.join(config.work_dir, "train_log.log"))
             logger = logger.info
         else:
             logger = print
+
+        if self.use_pe and self.pos_embed_type in ["sincos", "3d_rope"]:
+            if self.pos_embed_type == "sincos":
+                # Initialize (and freeze) pos_embed by sin-cos embedding:
+                pos_embed = get_2d_sincos_pos_embed(
+                    self.pos_embed.shape[-1],
+                    int(self.x_embedder.num_patches**0.5),
+                    pe_interpolation=self.pe_interpolation,
+                    base_size=self.base_size,
+                )
+                self.pos_embed.data.copy_(torch.from_numpy(pos_embed).float().unsqueeze(0))
+            elif self.pos_embed_type == "3d_rope":
+                # Initialize (and freeze) pos_embed by 3D-Rope embedding:
+                self.pos_embed = RopePosEmbed(theta=10000, axes_dim=[0, 16, 16])
+
+        self.initialize_weights()
+
         if get_rank() == 0:
             logger(
                 f"use pe: {use_pe}, pos embed type: {pos_embed_type}, "
@@ -353,23 +369,6 @@ class Sana(nn.Module):
                     nn.init.constant_(module.bias, 0)
 
         self.apply(_basic_init)
-
-        if self.use_pe:
-            if self.pos_embed_type == "sincos":
-                # Initialize (and freeze) pos_embed by sin-cos embedding:
-                pos_embed = get_2d_sincos_pos_embed(
-                    self.pos_embed.shape[-1],
-                    int(self.x_embedder.num_patches**0.5),
-                    pe_interpolation=self.pe_interpolation,
-                    base_size=self.base_size,
-                )
-            elif self.pos_embed_type == "3d_rope":
-                # Initialize (and freeze) pos_embed by 3D-Rope embedding:
-                pos_embed = RopePosEmbed(theta=10000, axes_dim=[0, 16, 16])
-            else:
-                raise ValueError(f"Unknown pos_embed_type: {self.pos_embed_type}")
-
-            self.pos_embed.data.copy_(torch.from_numpy(pos_embed).float().unsqueeze(0))
 
         # Initialize patch_embed like nn.Linear (instead of nn.Conv2d):
         w = self.x_embedder.proj.weight.data

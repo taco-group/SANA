@@ -32,7 +32,7 @@
 **Model Zoo:** [Model Card Collects All Models](asset/docs/model_zoo.md) <br>
 **Env Preparation:** [One-Click Env Install](#-1-dependencies-and-installation) <br>
 **Inference:** <br>      1) [diffusers:SanaPipeline](#1-how-to-use-sanapipeline-with-diffusers) <br>      2) [diffusers:SanaPAGPipeline](#2-how-to-use-sanapagpipeline-with-diffusers) <br>      3) [Ours:SanaPipeline](#3-how-to-use-sana-in-this-repo) <br>      4) [Inference with Docker](#4-run-sana-inference-with-docker) <br>      5) [Inference with TXT or JSON Files](#5-run-inference-with-txt-or-json-files) <br>
-**Training and Data:** <br>      1) [Image-Text Pairs](#1-train-with-image-text-pairs-in-directory) <br>      2) [Multi-Scale Webdataset](#2-train-with-multi-scale-webdataset) <br>      3) [TAR File Multi-Scale Webdataset](#3-train-with-tar-file) <br>      4) [FSDP Launch](#3-train-with-tar-file) <br>      5) [LoRA Training](asset/docs/sana_lora_dreambooth.md) <br>
+**Training and Data:** <br>      1) [Image-Text Pairs](#1-train-with-image-text-pairs-in-directory) <br>      2) [Multi-Scale Webdataset](#2-train-with-multi-scale-webdataset) <br>      3) [TAR File Multi-Scale Webdataset](#3-train-with-tar-file) <br>      4) [FSDP Launch](#3-train-with-tar-file) <br>      5) [LoRA Training](asset/docs/sana_lora_dreambooth.md) <br>      6) [SANA-Sprint Diffusers Training](https://github.com/huggingface/diffusers/blob/main/examples/research_projects/sana/README.md) <br>
 
 ### 🏃 Applications:
 
@@ -55,6 +55,7 @@
 
 ## 🔥🔥 News
 
+- (🔥 New) \[2025/5/8\] SANA-Sprint (One-step diffusion) diffusers training code is released [\[Guidance\]](https://github.com/huggingface/diffusers/blob/main/examples/research_projects/sana/README.md).
 - (🔥 New) \[2025/5/4\] **SANA-1.5 (Inference-time scaling) is accepted by ICML-2025.** 🎉🎉🎉
 - (🔥 New) \[2025/3/22\] 🔥**SANA-Sprint demo is hosted on Huggingface, try it!** 🎉 [\[Demo Link\]](https://huggingface.co/spaces/Efficient-Large-Model/SanaSprint)
 - (🔥 New) \[2025/3/22\] 🔥**SANA-1.5 is supported in ComfyUI!** 🎉: [ComfyUI Guidance](asset/docs/ComfyUI/comfyui.md) | [ComfyUI Work Flow SANA-1.5 4.8B](asset/docs/ComfyUI/SANA-1.5_FlowEuler.json)
